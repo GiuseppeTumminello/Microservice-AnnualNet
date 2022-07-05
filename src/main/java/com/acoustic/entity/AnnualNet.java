@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Builder
 public class AnnualNet {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private BigDecimal annualNetAmount;
