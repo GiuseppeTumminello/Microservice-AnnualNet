@@ -6,10 +6,7 @@ import com.acoustic.repository.AnnualNetRepository;
 import com.acoustic.service.SalaryCalculatorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
@@ -20,6 +17,7 @@ import java.util.Map;
 @RequestMapping("/annualNet")
 @RequiredArgsConstructor
 @Validated
+@CrossOrigin
 public class AnnualNetController {
 
     public static final String DESCRIPTION = "description";
@@ -32,7 +30,7 @@ public class AnnualNetController {
 
     @PostMapping("/getAnnualNet/{grossMonthlySalary}")
     public Map<String, String> calculateAnnualNet(@PathVariable @Min(2000)BigDecimal grossMonthlySalary){
-        var annualNet = salaryCalculatorService.apply(grossMonthlySalary);
+        var annualNet = this.salaryCalculatorService.apply(grossMonthlySalary);
         this.annualNetRepository.save(AnnualNet.builder().annualNetAmount(annualNet).build());
         return Map.of(DESCRIPTION,this.salaryCalculatorService.getDescription(), VALUE, String.valueOf(annualNet));
     }

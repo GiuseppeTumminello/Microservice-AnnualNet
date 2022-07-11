@@ -2,26 +2,25 @@ package com.acoustic.service;
 
 import com.acoustic.rate.RatesConfigurationProperties;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class AnnualNetService implements SalaryCalculatorService {
 
-    public static final double MONTHS_NUMBER = 12.0;
+    public static final int MONTHS_NUMBER = 12;
     private final RatesConfigurationProperties rate;
 
     @Override
     public BigDecimal apply(BigDecimal grossMonthlySalary) {
-        return (grossMonthlySalary.multiply(BigDecimal.valueOf(MONTHS_NUMBER))
-                .compareTo(this.rate.getTaxGrossAmountThreshold()) < 0)
-                ? getAnnualNetBasedOnRate(
-                grossMonthlySalary,
-                this.rate.getTaxRate17Rate())
-                : getAnnualNetBasedOnRate(grossMonthlySalary, this.rate.getTaxRate32Rate());
+        if (grossMonthlySalary.multiply(BigDecimal.valueOf(MONTHS_NUMBER)).compareTo(this.rate.getTaxGrossAmountThreshold()) < 0) {
+            return getAnnualNetBasedOnRate(grossMonthlySalary, this.rate.getTaxRate17Rate());
+        } else {
+            return getAnnualNetBasedOnRate(grossMonthlySalary, this.rate.getTaxRate32Rate());
+        }
     }
 
     @Override
@@ -43,9 +42,9 @@ public class AnnualNetService implements SalaryCalculatorService {
 
 
     private BigDecimal getAnnualNetBasedOnRate(BigDecimal grossMonthlySalary, BigDecimal rate) {
-        var salaryMinusTotalZus = this.calculateTotalZus(grossMonthlySalary);
-        var salaryMinusHealth = this.calculateHealth(salaryMinusTotalZus);
-        var salaryMonthlyNet = this.calculateMonthlyNet(rate, salaryMinusHealth);
+        var salaryMinusTotalZus = calculateTotalZus(grossMonthlySalary);
+        var salaryMinusHealth = calculateHealth(salaryMinusTotalZus);
+        var salaryMonthlyNet = calculateMonthlyNet(rate, salaryMinusHealth);
         return salaryMonthlyNet.multiply(BigDecimal.valueOf(MONTHS_NUMBER).setScale(2, RoundingMode.HALF_EVEN)).setScale(2, RoundingMode.HALF_EVEN);
 
     }
