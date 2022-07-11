@@ -27,7 +27,7 @@ class AnnualNetControllerTest {
     public static final String ANNUAL_NET_DESCRIPTION = "Annual net";
     public static final String DESCRIPTION = "description";
     public static final String VALUE = "value";
-    private final String ANNUAL_NET_ENDPOINT = "/annualNet/getAnnualNet/";
+    private final String ANNUAL_NET_ENDPOINT = "/annual-net/calculation/";
     @Autowired
     private MockMvc mockMvc;
     @Autowired

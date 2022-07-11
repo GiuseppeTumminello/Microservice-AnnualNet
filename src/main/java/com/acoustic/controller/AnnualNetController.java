@@ -14,7 +14,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/annualNet")
+@RequestMapping("/annual-net")
 @RequiredArgsConstructor
 @Validated
 @CrossOrigin
@@ -28,7 +28,7 @@ public class AnnualNetController {
 
 
 
-    @PostMapping("/getAnnualNet/{grossMonthlySalary}")
+    @PostMapping("/calculation/{grossMonthlySalary}")
     public Map<String, String> calculateAnnualNet(@PathVariable @Min(2000)BigDecimal grossMonthlySalary){
         var annualNet = this.salaryCalculatorService.apply(grossMonthlySalary);
         this.annualNetRepository.save(AnnualNet.builder().annualNetAmount(annualNet).build());
