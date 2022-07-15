@@ -22,6 +22,7 @@ public class AnnualNetController {
 
     public static final String DESCRIPTION = "description";
     public static final String VALUE = "value";
+    public static final int MINIMUM_GROSS = 2000;
     private final AnnualNetRepository annualNetRepository;
     private final SalaryCalculatorService salaryCalculatorService;
 
@@ -29,7 +30,7 @@ public class AnnualNetController {
 
 
     @PostMapping("/calculation/{grossMonthlySalary}")
-    public Map<String, String> calculateAnnualNet(@PathVariable @Min(2000)BigDecimal grossMonthlySalary){
+    public Map<String, String> calculateAnnualNet(@PathVariable @Min(MINIMUM_GROSS)BigDecimal grossMonthlySalary){
         var annualNet = this.salaryCalculatorService.apply(grossMonthlySalary);
         this.annualNetRepository.save(AnnualNet.builder().annualNetAmount(annualNet).build());
         return Map.of(DESCRIPTION,this.salaryCalculatorService.getDescription(), VALUE, String.valueOf(annualNet));
